@@ -105,26 +105,31 @@
                 };
                 
                 // Replace with your Google Apps Script URL
-                const scriptURL = 'https://script.google.com/macros/s/AKfycbwO27vXOSkiob9rFmGp1ci0FBM5TDWwmTZ0IFaG0adtkolis1UCAMAD1uHz9jWUf7w/exec';
+                const scriptURL = 'https://script.google.com/macros/s/AKfycbzhbFaHmItbLfr3c9OAKk-zuoAdolgqqj5j_Yu7vjljRNOwW1Nb6L_BMtmfLf7ou5-o/exec';
                 
                 const response = await fetch(scriptURL, {
                     method: 'POST',
-                    mode: 'no-cors', // Add this to handle CORS
-                    redirect: 'follow',
                     body: JSON.stringify(formData),
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 });
                 
-                alert('Order submitted successfully!');
-                // Reset form
-                document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-                    checkbox.checked = false;
-                });
-                selectedItems = [];
-                total = 0;
-                document.getElementById('total').textContent = `Total amount due: R0`;
+                // Parse the JSON response properly
+                const result = await response.json();
+                
+                if (result.status === "success") {
+                    alert('Order submitted successfully!');
+                    // Reset form
+                    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                        checkbox.checked = false;
+                    });
+                    selectedItems = [];
+                    total = 0;
+                    document.getElementById('total').textContent = `Total amount due: R0`;
+                } else {
+                    throw new Error(result.message || 'Submission failed');
+                }
             } catch (error) {
                 console.error('Error:', error);
                 alert('Error submitting data. Please try again.');
