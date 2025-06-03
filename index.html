@@ -130,7 +130,7 @@
                 alert('Please enter your SU Number');
                 return;
             }
-            
+        
             const submitBtn = document.getElementById('submit-btn');
             submitBtn.disabled = true;
             submitBtn.textContent = 'Submitting...';
@@ -148,15 +148,19 @@
                 };
                 
                 // Use your Google Apps Script URL
-                const scriptURL = 'https://script.google.com/macros/s/AKfycbzsOtMvfys-WThOXpdcOGIZcbzFomIFo1Fz0rF75DYFHBsvvfvG_TB-KZ840-6lIgM/exec';
+                const scriptURL = 'https://script.google.com/macros/s/AKfycbzeeP049FXOPhhXhAbhTIEAqpCxqhMSnZqX2pIGUnE07WIZ-dohu0zCixhvG0EJ7TQG/exec';
                 
-                // Use FormData instead of JSON to avoid CORS issues
-                const form = new FormData();
-                form.append('data', JSON.stringify(formData));
+                // FIXED: Send as URL-encoded form data instead of JSON
+                const formBody = Object.keys(formData)
+                    .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(formData[key]))
+                    .join('&');
                 
                 const response = await fetch(scriptURL, {
                     method: 'POST',
-                    body: form
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: formBody
                 });
                 
                 // Get response as text
