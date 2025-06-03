@@ -29,11 +29,42 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            margin-top: 10px;
+        }
+        .input-group {
+            margin: 15px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .required:after {
+            content: " *";
+            color: red;
         }
     </style>
 </head>
 <body>
     <h1>Store Calculator</h1>
+    
+    <!-- New input fields -->
+    <div class="input-group">
+        <label class="required" for="full-name">Full Name:</label>
+        <input type="text" id="full-name" required>
+    </div>
+    
+    <div class="input-group">
+        <label class="required" for="su-number">SU Number:</label>
+        <input type="text" id="su-number" required>
+    </div>
     
     <div id="items-container">
         <!-- Items will be added dynamically -->
@@ -86,6 +117,20 @@
         
         // Submit data to Google Sheets
         async function submitData() {
+            // Get user info
+            const fullName = document.getElementById('full-name').value.trim();
+            const suNumber = document.getElementById('su-number').value.trim();
+            
+            // Validate required fields
+            if (!fullName) {
+                alert('Please enter your Full Name');
+                return;
+            }
+            if (!suNumber) {
+                alert('Please enter your SU Number');
+                return;
+            }
+            
             const submitBtn = document.getElementById('submit-btn');
             submitBtn.disabled = true;
             submitBtn.textContent = 'Submitting...';
@@ -96,12 +141,14 @@
                 
                 // Prepare data for Google Sheets
                 const formData = {
+                    fullName: fullName,
+                    suNumber: suNumber,
                     items: selectedNames,
                     total: total
                 };
                 
                 // Use your Google Apps Script URL
-                const scriptURL = 'https://script.google.com/macros/s/AKfycbwLN2hwQs9vaqtIZ-OpbqzbWAbdG5IBoUZzV_rQ5XhFKD1XGUJjNAHEMwO59fFoiON8/exec';
+                const scriptURL = 'https://script.google.com/macros/s/AKfycbzsOtMvfys-WThOXpdcOGIZcbzFomIFo1Fz0rF75DYFHBsvvfvG_TB-KZ840-6lIgM/exec';
                 
                 // Use FormData instead of JSON to avoid CORS issues
                 const form = new FormData();
@@ -118,6 +165,8 @@
                 if (result === "success") {
                     alert('Order submitted successfully!');
                     // Reset form
+                    document.getElementById('full-name').value = '';
+                    document.getElementById('su-number').value = '';
                     document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
                         checkbox.checked = false;
                     });
