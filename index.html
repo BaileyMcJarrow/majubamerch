@@ -39,7 +39,7 @@
         <!-- Items will be added dynamically -->
     </div>
     
-    <div id="total">Total amount due: $0</div>
+    <div id="total">Total amount due: R0</div>
     <button id="submit-btn">Submit Order</button>
     
     <script>
@@ -61,7 +61,7 @@
                 itemElement.className = 'item';
                 itemElement.innerHTML = `
                     <input type="checkbox" id="item-${index}" data-index="${index}">
-                    <label for="item-${index}">${item.name} - $${item.price}</label>
+                    <label for="item-${index}">${item.name} - R${item.price}</label>
                 `;
                 container.appendChild(itemElement);
                 
@@ -81,7 +81,7 @@
                 selectedItems = selectedItems.filter(i => i !== item);
                 total -= item.price;
             }
-            document.getElementById('total').textContent = `Total amount due: $${total}`;
+            document.getElementById('total').textContent = `Total amount due: R${total}`;
         }
         
         // Submit data to Google Sheets
@@ -105,7 +105,7 @@
                 };
                 
                 // Replace with your Google Apps Script URL
-                const scriptURL = 'YOUR_GOOGLE_SCRIPT_URL';
+                const scriptURL = 'https://script.google.com/macros/s/AKfycby8EVl2vcEiFfh325PTThEeEAKInf5IbhJkYls543iIMlujrAPwaNLWvqpfk2oPXB2C/exec';
                 
                 const response = await fetch(scriptURL, {
                     method: 'POST',
@@ -123,7 +123,7 @@
                     });
                     selectedItems = [];
                     total = 0;
-                    document.getElementById('total').textContent = `Total amount due: $0`;
+                    document.getElementById('total').textContent = `Total amount due: R0`;
                 } else {
                     throw new Error('Failed to submit data');
                 }
