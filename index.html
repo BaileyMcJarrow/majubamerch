@@ -109,24 +109,22 @@
                 
                 const response = await fetch(scriptURL, {
                     method: 'POST',
+                    mode: 'no-cors', // Add this to handle CORS
+                    redirect: 'follow',
                     body: JSON.stringify(formData),
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 });
                 
-                if (response.ok) {
-                    alert('Order submitted successfully!');
-                    // Reset form
-                    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-                        checkbox.checked = false;
-                    });
-                    selectedItems = [];
-                    total = 0;
-                    document.getElementById('total').textContent = `Total amount due: R0`;
-                } else {
-                    throw new Error('Failed to submit data');
-                }
+                alert('Order submitted successfully!');
+                // Reset form
+                document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                selectedItems = [];
+                total = 0;
+                document.getElementById('total').textContent = `Total amount due: R0`;
             } catch (error) {
                 console.error('Error:', error);
                 alert('Error submitting data. Please try again.');
