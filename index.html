@@ -91,34 +91,31 @@
             submitBtn.textContent = 'Submitting...';
             
             try {
-                // Get current timestamp
-                const timestamp = new Date().toLocaleString();
-                
                 // Format selected items
                 const selectedNames = selectedItems.map(item => item.name).join(', ') || 'None';
                 
                 // Prepare data for Google Sheets
                 const formData = {
-                    timestamp: timestamp,
                     items: selectedNames,
                     total: total
                 };
                 
-                // Replace with your Google Apps Script URL
+                // Use your Google Apps Script URL
                 const scriptURL = 'https://script.google.com/macros/s/AKfycbzhbFaHmItbLfr3c9OAKk-zuoAdolgqqj5j_Yu7vjljRNOwW1Nb6L_BMtmfLf7ou5-o/exec';
+                
+                // Use FormData instead of JSON to avoid CORS issues
+                const form = new FormData();
+                form.append('data', JSON.stringify(formData));
                 
                 const response = await fetch(scriptURL, {
                     method: 'POST',
-                    body: JSON.stringify(formData),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+                    body: form
                 });
                 
-                // Parse the JSON response properly
-                const result = await response.json();
+                // Get response as text
+                const result = await response.text();
                 
-                if (result.status === "success") {
+                if (result === "success") {
                     alert('Order submitted successfully!');
                     // Reset form
                     document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
@@ -128,11 +125,11 @@
                     total = 0;
                     document.getElementById('total').textContent = `Total amount due: R0`;
                 } else {
-                    throw new Error(result.message || 'Submission failed');
+                    throw new Error(result);
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Error submitting data. Please try again.');
+                alert('Error submitting data: ' + error.message);
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Submit Order';
