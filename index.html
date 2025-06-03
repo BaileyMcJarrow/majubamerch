@@ -148,7 +148,7 @@
                 };
                 
                 // Use your Google Apps Script URL
-                const scriptURL = 'https://script.google.com/macros/s/AKfycbzeeP049FXOPhhXhAbhTIEAqpCxqhMSnZqX2pIGUnE07WIZ-dohu0zCixhvG0EJ7TQG/exec';
+                const scriptURL = 'https://script.google.com/macros/s/AKfycbwaiUXQlT5ExuxDjP_SPRcuysNjZ1PIbLaYQb0pIzd_twvJAZeS5HmSDVJBOgXS5cqM/exec';
                 
                 // FIXED: Send as URL-encoded form data instead of JSON
                 const formBody = Object.keys(formData)
@@ -180,9 +180,18 @@
                 } else {
                     throw new Error(result);
                 }
+            // Inside submitData() catch block:
             } catch (error) {
                 console.error('Error:', error);
-                alert('Error submitting data: ' + error.message);
+                
+                // Show more detailed error message
+                let errorMsg = 'Error submitting data';
+                if (error.message.includes('Store Orders')) {
+                    errorMsg += '\n\nPlease check sheet name in Google Sheets';
+                }
+                errorMsg += ':\n' + error.message;
+                
+                alert(errorMsg);
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Submit Order';
