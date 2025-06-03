@@ -137,7 +137,7 @@
             
             try {
                 // Format selected items
-                const selectedNames = selectedItems.map(item => item.name).join(', ') || 'None';
+                const selectedNames = selectedItems.map(item => item.name).join('\n') || 'None';
                 
                 // Prepare data for Google Sheets
                 const formData = {
